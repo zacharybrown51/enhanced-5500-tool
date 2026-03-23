@@ -1,0 +1,55 @@
+{
+  "row_count": 4285,
+  "city_count": 36,
+  "variant_counts": {
+    "UNKNOWN": 4285
+  },
+  "errors": [
+    {
+      "type": "duplicate_export_keys",
+      "count": 5
+    },
+    {
+      "type": "zero_participants_with_assets",
+      "count": 23
+    }
+  ],
+  "warnings": [
+    {
+      "type": "missing_recordkeeper",
+      "count": 3524,
+      "sf_count": 0,
+      "full_count": 0
+    },
+    {
+      "type": "extreme_asset_growth",
+      "count": 24
+    },
+    {
+      "type": "elevated_admin_expense_ratio_rows",
+      "count": 629
+    }
+  ],
+  "dataset_schema": {
+    "site_row_length_min": 38,
+    "site_row_length_max": 38
+  },
+  "score_distribution": {
+    "min": 0,
+    "max": 87,
+    "mean": 58.7,
+    "median": 62
+  },
+  "selection_summary": {},
+  "selection_reasons": {},
+  "deduped_away_count": 0,
+  "signal_frequency_top10": {
+    "HBL": 1210,
+    "NSH": 954,
+    "HGR": 838,
+    "PSH": 253,
+    "LTC": 177,
+    "DEC": 169,
+    "ESC": 81
+  }
+}
