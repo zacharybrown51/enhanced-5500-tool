@@ -1,0 +1,93 @@
+name: Update Plan Data from DOL
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+    inputs:
+      dataset_url:
+        description: Optional direct ZIP URL override
+        required: false
+        type: string
+      filing_year:
+        description: Filing year to prefer during discovery
+        required: false
+        default: '2024'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright
+        run: |
+          npm init -y
+          npm install playwright
+          npx playwright install --with-deps chromium
+
+      - name: Discover latest DOL dataset URL
+        id: discover
+        env:
+          PREFERRED_YEAR: ${{ inputs.filing_year || '2024' }}
+          DATASET_URL_OVERRIDE: ${{ inputs.dataset_url }}
+        run: |
+          URL=$(node scripts/discover_dol_dataset.mjs)
+          echo "dataset_url=$URL" >> $GITHUB_OUTPUT
+          echo "Discovered: $URL"
+
+      - name: Download dataset ZIP
+        run: |
+          mkdir -p scripts/downloads
+          curl -fL "${{ steps.discover.outputs.dataset_url }}" -o scripts/downloads/dol_dataset.zip
+
+      - name: Build dataset.json and validation artifacts
+        run: |
+          python scripts/build_data.py --zip scripts/downloads/dol_dataset.zip
+
+      - name: Fail on hard validation errors
+        run: |
+          python - <<'PY'
+          import json, sys
+          with open('validation_report.json', 'r', encoding='utf-8') as f:
+              report = json.load(f)
+          if report.get('errors'):
+              print('Hard validation errors found. Aborting deploy.')
+              for err in report['errors']:
+                  print('-', err)
+              sys.exit(1)
+          print('Validation passed with no hard errors.')
+          PY
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet -- dataset.json validation_report.json summary_report.txt; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "Mammini Data Bot"
+          git config user.email "data-bot@mammini.com"
+          git add dataset.json validation_report.json summary_report.txt
+          git commit -m "Data refresh: $(date +%Y-%m-%d)"
+          git push
