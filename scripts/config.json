@@ -1,0 +1,33 @@
+{
+  "region_name": "San Diego County",
+  "state": "CA",
+  "zip_prefixes": ["919", "920", "921"],
+  "filing_year": "2024",
+  "provider_role_codes": {
+    "16": "RK",
+    "15": "TPA",
+    "13": "IA",
+    "11": "BD",
+    "19": "AUD",
+    "14": "CUS",
+    "17": "LAW",
+    "18": "ACT",
+    "12": "INS"
+  },
+  "plan_code_features": {
+    "2A": "Profit sharing",
+    "2E": "401(k)",
+    "2F": "Participant-directed",
+    "2G": "Total part.-directed",
+    "2H": "401(k) with ESOP",
+    "2J": "Employer match",
+    "2K": "Employer discretionary",
+    "2O": "ESOP",
+    "2R": "Roth 401(k)",
+    "2S": "Safe harbor",
+    "2T": "Safe harbor",
+    "2V": "Auto enrollment",
+    "3D": "Pre-approved plan",
+    "3H": "Frozen plan"
+  }
+}
