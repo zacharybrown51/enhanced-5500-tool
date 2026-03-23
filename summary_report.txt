@@ -1,0 +1,27 @@
+RUN SUMMARY
+-----------
+Status: FAIL
+Rows: 4,285
+Cities: 36
+
+Filing Mix:
+- 5500 full-like rows: 0
+- 5500-SF-like rows: 0
+- Unknown mix: 4,285
+
+Selection:
+- Deduped-away candidates: 0
+- Multi-filing plans: 0
+- Newer plan year wins: 0
+- Amended filing wins: 0
+- Completeness/recency wins: 0
+
+Validation:
+- Hard errors: 2
+- Warnings: 3
+
+Score Distribution:
+- Min: 0
+- Mean: 58.7
+- Median: 62
+- Max: 87
